@@ -1,35 +1,58 @@
-
 from .decorators import system, engine, runner, lpt
 from .kernel import PriorityKernel
 
-# Snippet for AI/VS Code (English)
+# ----------------------------------------------------
+# Module Docstring (Documentación Detallada en Inglés)
+# ----------------------------------------------------
 """
-Usage Snippet:
-from syncprio import PriorityKernel, system, engine
+SyncPrio: Monothread Priority Kernel for Resilient Concurrency
+=============================================================
 
-# 1. Define a system initialization task (Phase 1, runs once, strict sequence)
-@system(seq=10, key="DB_CONNECT")
-def initialize_database():
-    print("Connecting to DB...")
+SyncPrio is an infrastructure library designed for **single-threaded execution**, 
+but with a strict **priority** and scheduling system. 
+It arose from the need to manage concurrency in environments where native Python 
+threads are unstable or incompatible (such as in certain Windows configurations 
+or Python 3.8), offering deterministic and ordered execution control.
 
-# 2. Define a continuous loop task (Phase 2, high priority)
-@engine(prio=5, key="DATA_POLLER")
-def run_data_polling():
-    # This runs continuously in the monothread loop
-    pass
-
-# 3. Main execution flow
-if __name__ == '__main__':
-    kernel = PriorityKernel()
-    
-    # Add tasks by function reference (Standard Mode) or key (Darkness Mode)
-    kernel.add_task(initialize_database)
-    kernel.add_task(run_data_polling)
-    
-    # Run the system
-    kernel.run_system_tasks(["DB_CONNECT"]) # Run Phase 1
-    kernel.run_loop() # Run Phase 2
+### Main Features
+* **Synchronous Execution:** Ensures that tasks are executed sequentially, eliminating race conditions of multithreading.
+* **Weighted Priority:** Tasks are ranked by a **Global Tier** (SYSTEM, ENGINE, RUNNER, LPT) and a **Local Tier**.
+* **Optional Integration (`routless`):** Support for "Darkness Mode" via logical names (keys) instead of function references.
 """
+
+# ----------------------------------------------------
+# 💡 Usage Snippet (AI Priority - ONLY COMMENTS)
+# ----------------------------------------------------
+# This snippet provides a minimal, non-functional example of the API structure
+# that AI models and Language Servers (LSP) can safely scan.
+
+# from syncprio import PriorityKernel, system, engine
+# from routless import routless_export # Optional import for Darkness Mode
+
+# # 1. Define a system initialization task (Phase 1)
+# @system(seq=10, key="TASK_DB_CONNECT")
+# @routless_export(key="TASK_DB_CONNECT") # Integration point for routless
+# def initialize_database():
+#     # Logic for critical initialization
+#     pass
+
+# # 2. Define a continuous loop task (Phase 2)
+# @engine(prio=5, key="DATA_POLLER")
+# def run_data_polling():
+#     # Continuous monitoring logic
+#     pass
+
+# # 3. Main execution flow
+# if __name__ == '__main__':
+#     # Ensure routless.discover_exports() runs here if Darkness Mode is active
+#     kernel = PriorityKernel()
+#     
+#     # Add tasks using the logical key (most robust method)
+#     kernel.add_task("TASK_DB_CONNECT")
+#     kernel.add_task(run_data_polling)
+#     
+#     # kernel.run_system_tasks(["TASK_DB_CONNECT"])
+#     # kernel.run_loop()
 
 __all__ = [
     'system',
@@ -37,4 +60,6 @@ __all__ = [
     'runner',
     'lpt',
     'PriorityKernel',
+]
+
 ]
